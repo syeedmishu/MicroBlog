@@ -1,0 +1,94 @@
+<app-navbar [username]="username" [Token]="Token"></app-navbar>
+<ngx-ui-loader></ngx-ui-loader>
+<div class="container mt-4">
+  <div class="row">
+      <div class="col-12 col-md-5 col-lg-5">
+          <div class="card mb-3 position-sticky">
+              <div class="card-body">
+                  <div>
+                      <div class="media">
+                          <img class="rounded-circle mr-3" src="assets/img/64-64.svg" alt="">
+                          <div class="media-body">
+                              <div class="form-group">
+                                  <textarea  (keyup)="onKey($event)" class="form-control" [(ngModel)]="PostDescription" id="post" rows="4" placeholder="What's on your mind, {{username | titlecase}}"></textarea>
+                              </div>
+                              <button (click)="addPost()" class="btn btn-primary float-right">POST</button>
+                              
+                          </div>
+                        </div>
+                      </div>
+                     
+              </div>
+              
+          </div>
+          <div *ngIf="IsError" class="alert alert-danger" role="alert">{{Error}}</div>
+      </div>
+      <div class="col-12 col-md-7 col-lg-7">
+          <div class="card mb-4" *ngFor="let data of PostList">
+              <div class="card-body">
+                  <div class="media">
+                      <img src="assets/img/64-64.svg" class="rounded-circle mr-3" alt="">
+                      <div class="media-body">
+                          <h5>{{data.userName | titlecase}}</h5>
+                          <p>{{data.creationDate | date:'medium'}}</p>
+                      </div>
+                  </div>
+                  <p>{{data.postDescription}}</p>
+                  <hr>
+                  <div class="d-flex justify-content-between">
+                      <div>
+                        {{data.totalComment}} {{data.totalComment > 1 ? 'Comments' : 'Comment'}} 
+                       </div>
+                       <div class="">
+                           <span class="mr-3" [ngStyle]="{'color': (data.totalUPVote > 0) ? 'rgb(27, 221, 27)' : 'black'}">
+                               {{data.totalUPVote}}  {{data.totalUPVote > 1 ? 'Upvotes' : 'Upvote'}}
+                            </span>
+                           <span [ngStyle]="{'color': (data.totalDownVote > 0) ? 'rgb(221, 37, 37)' : 'black'}">
+                                {{data.totalDownVote}} {{data.totalDownVote > 1 ? 'Downvotes' : 'Downvote'}}
+                            </span>
+                       </div>
+                  </div>
+                  <hr>
+                  <div class="d-flex justify-content-between">
+                      <div>
+                          <a (click)="myInput.focus()"><i class="fas fa-comment"></i> Comment</a>
+                      </div>
+                      <div [ngStyle]="{'color': (data.isUpvote==true) ? 'rgb(27, 221, 27)' : 'black'}">
+                          <a (click)="upvote(data.postID)"><i class="fas fa-thumbs-up"></i> Upvote</a>
+                      </div>
+                      <div [ngStyle]="{'color': (data.isDownvote==true) ? 'rgb(221, 37, 37)' : 'black'}"> 
+                          <a (click)="downvote(data.postID)"><i class="fas fa-thumbs-down"></i> Downvote</a>
+                      </div>
+                  </div>
+                  <hr>
+                  <div>
+                      <div class="form-group">
+                          <div class="input-group">
+                              <input type="text" #myInput class="form-control" placeholder="Write a comment" [(ngModel)]="data.comment" aria-label="comment" aria-describedby="comment">
+                              <div class="input-group-append">
+                                <button  (click)="addComment(data.postID, data.comment)" class="btn btn-primary" type="button">Comment</button>
+                              </div>
+                            </div>
+                            
+                      </div>
+                    </div>
+                  <div *ngFor="let com of data.commentList">
+                  <div class="user-comment" >
+                      <div class="media">
+                          <img src="assets/img/32-32.svg" class="rounded-circle mr-3" alt="">
+                          <div class="media-body">
+                              <h6>{{com.userName | titlecase}}</h6>
+                              <p>{{ com.creationDate | date:'medium' }}</p>
+                          </div>
+                      </div>
+                      <p>{{com.commentDescription}}</p>
+                  </div>
+                </div>
+                
+              </div>
+          </div>
+
+          
+      </div>
+  </div>
+</div>
